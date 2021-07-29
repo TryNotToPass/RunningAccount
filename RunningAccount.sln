@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RunningAccountWeb", "Runnin
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DBClassRA", "DBClassRA\DBClassRA.csproj", "{32B03B76-B9C2-4F7F-B3BF-5F6489A724A8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DBHelper", "DBHelper\DBHelper.csproj", "{AF308E46-62E5-4A6F-B9DE-21C118649B53}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{32B03B76-B9C2-4F7F-B3BF-5F6489A724A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{32B03B76-B9C2-4F7F-B3BF-5F6489A724A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{32B03B76-B9C2-4F7F-B3BF-5F6489A724A8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AF308E46-62E5-4A6F-B9DE-21C118649B53}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AF308E46-62E5-4A6F-B9DE-21C118649B53}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AF308E46-62E5-4A6F-B9DE-21C118649B53}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AF308E46-62E5-4A6F-B9DE-21C118649B53}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

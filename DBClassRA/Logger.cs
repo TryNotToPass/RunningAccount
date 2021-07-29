@@ -10,7 +10,9 @@ namespace DBClassRA
     {
         public static void WriteLog(Exception ex)
         {
-
+            string msg = $@"DateTime.Now";
+            System.IO.File.AppendAllText("C:\\Log\\log.log", ex.ToString());
+            
         }
     }
 }

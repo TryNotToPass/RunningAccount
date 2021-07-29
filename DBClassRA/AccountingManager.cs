@@ -6,54 +6,43 @@ using System.Threading.Tasks;
 using System.Data;
 using System.Configuration;
 using System.Data.SqlClient;
+using DBHelperClass;
 
 namespace DBClassRA
 {
     public class AccountingManager
     {
-        public static string GetConnectingStr()
-        {
-            string val = ConfigurationManager.ConnectionStrings["DConnectionRA"].ConnectionString;
-            return val;
-        }
 
         public static DataTable GetAccountingList(string userid) //獲取表單
         {
-            string cs = GetConnectingStr();
+            string cs = DBHelper.GetConnectingStr();
             string dbcs = @"SELECT ID, UserID, Caption, Amount, ActType, CreateDate
                                 FROM Accounting
                                 WHERE UserID = @userid;";
 
-            using (SqlConnection connection = new SqlConnection(cs))
-            {
-                using (SqlCommand command = new SqlCommand(dbcs, connection))
-                {
-                    command.Parameters.AddWithValue("@userid", userid);
-                    try
-                    {
-                        connection.Open();
-                        SqlDataReader reader = command.ExecuteReader();
+            List<SqlParameter> list = new List<SqlParameter>();
+            list.Add(new SqlParameter("@userid", userid));
 
-                        DataTable dt = new DataTable();
-                        dt.Load(reader);
-                        reader.Close();
-                        return dt;
-                    }
-                    catch (Exception ex)
-                    {
-                        Logger.WriteLog(ex);
-                        return null;
-                    }
-                }
+            try 
+            {
+                return DBHelper.DBTableMethod(cs, dbcs, list);
+            } 
+            catch(Exception ex)
+            {
+                Logger.WriteLog(ex);
+                return null;
             }
+            
         }
+
+        
 
         public static void CreateAccounting(string userID, string caption, int amount, int actType, string body) 
         {
             if (amount < 0 || amount > 1000000) throw new ArgumentException("我去，你的錢太多囉。");
             if (actType < 0 || actType > 1) throw new ArgumentException("只能是1或0");
 
-            string cs = GetConnectingStr();
+            string cs = DBHelper.GetConnectingStr();
             string dbcs = @"INSERT INTO [dbo].[Accounting]
                                 (UserID
                                 ,Caption
@@ -97,7 +86,7 @@ namespace DBClassRA
             if (amount < 0 || amount > 1000000) throw new ArgumentException("我去，你的錢太多囉。");
             if (actType < 0 || actType > 1) throw new ArgumentException("只能是1或0");
 
-            string cs = GetConnectingStr();
+            string cs = DBHelper.GetConnectingStr();
             string dbcs = @"UPDATE [Accounting]
                                 SET
                                 UserID        = @userid
@@ -139,7 +128,7 @@ namespace DBClassRA
 
         public static DataRow GetAccounting(int id, string userID) 
         {
-            string cs = GetConnectingStr();
+            string cs = DBHelper.GetConnectingStr();
             string dbcs = @"SELECT ID, Caption, Amount, ActType, CreateDate, Body
                                 FROM Accounting
                                 WHERE ID = @id AND UserID = @userID;";
@@ -172,7 +161,7 @@ namespace DBClassRA
 
         public static void DeleteAccounting(int id)
         {
-            string cs = GetConnectingStr();
+            string cs = DBHelper.GetConnectingStr();
             string dbcs = @"DELETE [Accounting] 
                                 WHERE ID = @id;";
             using (SqlConnection connection = new SqlConnection(cs))
