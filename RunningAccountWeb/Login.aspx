@@ -1,0 +1,25 @@
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Login.aspx.cs" Inherits="RunningAccountWeb.Login" %>
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title></title>
+</head>
+<body>
+    <form id="form1" runat="server">
+        <div>
+            <asp:PlaceHolder ID="ph_login" runat="server">
+                帳號：<asp:TextBox ID="TxtAcc" runat="server"></asp:TextBox>
+                <br />
+                密碼：<asp:TextBox ID="TxtPwd" runat="server" TextMode="Password"></asp:TextBox>
+                <br />
+                <asp:Button ID="Button1" runat="server" Text="登入" OnClick="Button1_Click" />
+                <br />
+                <asp:Literal ID="limsg" runat="server"></asp:Literal>
+            </asp:PlaceHolder>
+        </div>
+    </form>
+</body>
+</html>
