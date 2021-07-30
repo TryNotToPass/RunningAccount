@@ -6,6 +6,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Data;
 using DBClassRA;
+using DBHelperClass;
 
 namespace RunningAccountWeb.SystemAdmin
 {
@@ -13,14 +14,14 @@ namespace RunningAccountWeb.SystemAdmin
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            string account = this.Session["UserLoginInfo"] as string;
-            DataRow dr = UserInfoManager.GetUserInfoByAcc(account);
-
-            if (dr == null)
+            if (!DBHelper.IsLogined())
             {
                 Response.Redirect("/Login.aspx");
                 return;
             }
+
+            string account = this.Session["UserLoginInfo"] as string;
+            DataRow dr = UserInfoManager.GetUserInfoByAcc(account);
             if (!this.IsPostBack)
             {
                 if (this.Request.QueryString["ID"] == null) this.Button2.Visible = false;
@@ -67,9 +68,15 @@ namespace RunningAccountWeb.SystemAdmin
                 this.Literal1.Text = string.Join("<br/>", msgList);
                 return;
             }
-            string account = this.Session["UserLoginInfo"] as string;
-            DataRow dr = UserInfoManager.GetUserInfoByAcc(account);
-            if (dr == null) 
+            //string account = this.Session["UserLoginInfo"] as string;
+            //DataRow dr = UserInfoManager.GetUserInfoByAcc(account);
+            //if (dr == null) 
+            //{
+            //    Response.Redirect("/Login.aspx");
+            //    return;
+            //}
+            UserInfoModel currentUser = DBHelper.GetCurrenctUser();
+            if (currentUser == null) 
             {
                 Response.Redirect("/Login.aspx");
                 return;
@@ -77,7 +84,8 @@ namespace RunningAccountWeb.SystemAdmin
 
             this.Literal1.Text = String.Empty;
 
-            string userID = dr["ID"].ToString();
+            //string userID = dr["ID"].ToString();
+            string userID = currentUser.ID;
             string actTypeT = this.DropDownList1.SelectedValue;
             string amountT = this.TextAmount.Text;
             string captionT = this.TextCaption.Text;

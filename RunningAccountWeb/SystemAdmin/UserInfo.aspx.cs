@@ -6,6 +6,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Data;
 using DBClassRA;
+using DBHelperClass;
 
 namespace RunningAccountWeb.SystemAdmin
 {
@@ -20,8 +21,17 @@ namespace RunningAccountWeb.SystemAdmin
                     Response.Redirect("/Login.aspx");
                     return;
                 }
-                string acc = this.Session["UserLoginInfo"] as string;
-                DataRow dr = UserInfoManager.GetUserInfoByAcc(acc);
+
+                UserInfoModel currenct = DBHelper.GetCurrenctUser();
+                if (currenct == null)
+                {
+                    this.Session["UserLoginInfo"] = null;
+                    Response.Redirect("/Login.aspx");
+                    return;
+                }
+                //string account = this.Session["UserLoginInfo"] as string;
+                //DataRow dr = UserInfoManager.GetUserInfoByAcc(account);
+                DataRow dr = UserInfoManager.GetUserInfoByAcc(currenct.Account);
                 if (dr == null) 
                 {
                     Response.Redirect("/Login.aspx");
@@ -35,7 +45,8 @@ namespace RunningAccountWeb.SystemAdmin
         }
         protected void Button1_Click(object sender, EventArgs e)
         {
-            this.Session["UserLoginInfo"] = null;
+            //this.Session["UserLoginInfo"] = null;
+            DBHelper.Logout();
             Response.Redirect("/Login.aspx");
         }
     }

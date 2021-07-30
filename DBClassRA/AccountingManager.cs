@@ -66,7 +66,7 @@ namespace DBClassRA
 
             try
             {
-                DBHelper.DBTableENQuery(cs, dbcs, list);
+                DBHelper.ModifyData(cs, dbcs, list);
             }
             catch (Exception ex)
             {
@@ -125,7 +125,7 @@ namespace DBClassRA
 
             try
             {
-                int efr = DBHelper.DBTableENQuery(cs, dbcs, list);
+                int efr = DBHelper.ModifyData(cs, dbcs, list);
                 if (efr == 1) return true;
                 else return false;
             }
@@ -225,7 +225,7 @@ namespace DBClassRA
 
             try
             {
-                DBHelper.DBTableENQuery(cs, dbcs, list);
+                DBHelper.ModifyData(cs, dbcs, list);
             }
             catch (Exception ex)
             {
