@@ -35,8 +35,6 @@ namespace DBClassRA
             
         }
 
-        
-
         public static void CreateAccounting(string userID, string caption, int amount, int actType, string body) 
         {
             if (amount < 0 || amount > 1000000) throw new ArgumentException("我去，你的錢太多囉。");
@@ -58,27 +56,45 @@ namespace DBClassRA
                                 ,@createDate
                                 ,@body)";
 
-            using (SqlConnection connection = new SqlConnection(cs))
+            List<SqlParameter> list = new List<SqlParameter>();
+            list.Add(new SqlParameter("@userid", userID));
+            list.Add(new SqlParameter("@caption", caption));
+            list.Add(new SqlParameter("@amount", amount));
+            list.Add(new SqlParameter("@actType", actType));
+            list.Add(new SqlParameter("@createDate", DateTime.Now));
+            list.Add(new SqlParameter("@body", body));
+
+            try
             {
-                using (SqlCommand command = new SqlCommand(dbcs, connection))
-                {
-                    command.Parameters.AddWithValue("@userid", userID);
-                    command.Parameters.AddWithValue("@caption", caption);
-                    command.Parameters.AddWithValue("@amount", amount);
-                    command.Parameters.AddWithValue("@actType", actType);
-                    command.Parameters.AddWithValue("@createDate", DateTime.Now);
-                    command.Parameters.AddWithValue("@body", body);
-                    try
-                    {
-                        connection.Open();
-                        command.ExecuteNonQuery();
-                    }
-                    catch (Exception ex)
-                    {
-                        Logger.WriteLog(ex);
-                    }
-                }
+                DBHelper.DBTableENQuery(cs, dbcs, list);
             }
+            catch (Exception ex)
+            {
+                Logger.WriteLog(ex);
+            }
+            #region 以備不時之需
+            //using (SqlConnection connection = new SqlConnection(cs))
+            //{
+            //    using (SqlCommand command = new SqlCommand(dbcs, connection))
+            //    {
+            //        command.Parameters.AddWithValue("@userid", userID);
+            //        command.Parameters.AddWithValue("@caption", caption);
+            //        command.Parameters.AddWithValue("@amount", amount);
+            //        command.Parameters.AddWithValue("@actType", actType);
+            //        command.Parameters.AddWithValue("@createDate", DateTime.Now);
+            //        command.Parameters.AddWithValue("@body", body);
+            //        try
+            //        {
+            //            connection.Open();
+            //            command.ExecuteNonQuery();
+            //        }
+            //        catch (Exception ex)
+            //        {
+            //            Logger.WriteLog(ex);
+            //        }
+            //    }
+            //}
+            #endregion
         }
 
         public static bool UpadateAccounting(int id, string userID, string caption, int amount, int actType, string body)
@@ -98,32 +114,54 @@ namespace DBClassRA
                            WHERE
                                 ID = @id";
 
-            using (SqlConnection connection = new SqlConnection(cs))
-            {
-                using (SqlCommand command = new SqlCommand(dbcs, connection))
-                {
-                    command.Parameters.AddWithValue("@id", id);
-                    command.Parameters.AddWithValue("@userid", userID);
-                    command.Parameters.AddWithValue("@caption", caption);
-                    command.Parameters.AddWithValue("@amount", amount);
-                    command.Parameters.AddWithValue("@actType", actType);
-                    command.Parameters.AddWithValue("@createDate", DateTime.Now);
-                    command.Parameters.AddWithValue("@body", body);
-                    try
-                    {
-                        connection.Open();
-                        int efr = command.ExecuteNonQuery();
+            List<SqlParameter> list = new List<SqlParameter>();
+            list.Add(new SqlParameter("@id", id));
+            list.Add(new SqlParameter("@userid", userID));
+            list.Add(new SqlParameter("@caption", caption));
+            list.Add(new SqlParameter("@amount", amount));
+            list.Add(new SqlParameter("@actType", actType));
+            list.Add(new SqlParameter("@createDate", DateTime.Now));
+            list.Add(new SqlParameter("@body", body));
 
-                        if (efr == 1) return true;
-                        else return false;
-                    }
-                    catch (Exception ex)
-                    {
-                        Logger.WriteLog(ex);
-                        return false;
-                    }
-                }
+            try
+            {
+                int efr = DBHelper.DBTableENQuery(cs, dbcs, list);
+                if (efr == 1) return true;
+                else return false;
             }
+            catch (Exception ex)
+            {
+                Logger.WriteLog(ex);
+                return false;
+            }
+            #region 以備不時之需
+            //using (SqlConnection connection = new SqlConnection(cs))
+            //{
+            //    using (SqlCommand command = new SqlCommand(dbcs, connection))
+            //    {
+            //        command.Parameters.AddWithValue("@id", id);
+            //        command.Parameters.AddWithValue("@userid", userID);
+            //        command.Parameters.AddWithValue("@caption", caption);
+            //        command.Parameters.AddWithValue("@amount", amount);
+            //        command.Parameters.AddWithValue("@actType", actType);
+            //        command.Parameters.AddWithValue("@createDate", DateTime.Now);
+            //        command.Parameters.AddWithValue("@body", body);
+            //        try
+            //        {
+            //            connection.Open();
+            //            int efr = command.ExecuteNonQuery();
+
+            //            if (efr == 1) return true;
+            //            else return false;
+            //        }
+            //        catch (Exception ex)
+            //        {
+            //            Logger.WriteLog(ex);
+            //            return false;
+            //        }
+            //    }
+            //}
+            #endregion
         }
 
         public static DataRow GetAccounting(int id, string userID) 
@@ -132,31 +170,48 @@ namespace DBClassRA
             string dbcs = @"SELECT ID, Caption, Amount, ActType, CreateDate, Body
                                 FROM Accounting
                                 WHERE ID = @id AND UserID = @userID;";
+            List<SqlParameter> list = new List<SqlParameter>();
+            list.Add(new SqlParameter("@id", id));
+            list.Add(new SqlParameter("@userID", userID));
 
-            using (SqlConnection connection = new SqlConnection(cs))
+            try
             {
-                using (SqlCommand command = new SqlCommand(dbcs, connection))
-                {
-                    command.Parameters.AddWithValue("@id", id);
-                    command.Parameters.AddWithValue("@userID", userID);
-                    try
-                    {
-                        connection.Open();
-                        SqlDataReader reader = command.ExecuteReader();
-
-                        DataTable dt = new DataTable();
-                        dt.Load(reader);
-                        if (dt.Rows.Count == 0) return null;
-                        DataRow dr = dt.Rows[0];
-                        return dr;
-                    }
-                    catch (Exception ex)
-                    {
-                        Logger.WriteLog(ex);
-                        return null;
-                    }
-                }
+                DataTable dt = DBHelper.DBTableMethod(cs, dbcs, list);
+                if (dt.Rows.Count == 0) return null;
+                DataRow dr = dt.Rows[0];
+                return dr;
             }
+            catch (Exception ex)
+            {
+                Logger.WriteLog(ex);
+                return null;
+            }
+            #region 以備不時之需
+            //using (SqlConnection connection = new SqlConnection(cs))
+            //{
+            //    using (SqlCommand command = new SqlCommand(dbcs, connection))
+            //    {
+            //        command.Parameters.AddWithValue("@id", id);
+            //        command.Parameters.AddWithValue("@userID", userID);
+            //        try
+            //        {
+            //            connection.Open();
+            //            SqlDataReader reader = command.ExecuteReader();
+
+            //            DataTable dt = new DataTable();
+            //            dt.Load(reader);
+            //            if (dt.Rows.Count == 0) return null;
+            //            DataRow dr = dt.Rows[0];
+            //            return dr;
+            //        }
+            //        catch (Exception ex)
+            //        {
+            //            Logger.WriteLog(ex);
+            //            return null;
+            //        }
+            //    }
+            //}
+            #endregion
         }
 
         public static void DeleteAccounting(int id)
@@ -164,24 +219,38 @@ namespace DBClassRA
             string cs = DBHelper.GetConnectingStr();
             string dbcs = @"DELETE [Accounting] 
                                 WHERE ID = @id;";
-            using (SqlConnection connection = new SqlConnection(cs))
+
+            List<SqlParameter> list = new List<SqlParameter>();
+            list.Add(new SqlParameter("@id", id));
+
+            try
             {
-                using (SqlCommand command = new SqlCommand(dbcs, connection))
-                {
-                    command.Parameters.AddWithValue("@id", id);
-
-                    try
-                    {
-                        connection.Open();
-                        command.ExecuteNonQuery();
-                    }
-                    catch (Exception ex)
-                    {
-                        Logger.WriteLog(ex);
-                    }
-                }
-
+                DBHelper.DBTableENQuery(cs, dbcs, list);
             }
+            catch (Exception ex)
+            {
+                Logger.WriteLog(ex);
+            }
+            #region 以備不時之需
+            //using (SqlConnection connection = new SqlConnection(cs))
+            //{
+            //    using (SqlCommand command = new SqlCommand(dbcs, connection))
+            //    {
+            //        command.Parameters.AddWithValue("@id", id);
+
+            //        try
+            //        {
+            //            connection.Open();
+            //            command.ExecuteNonQuery();
+            //        }
+            //        catch (Exception ex)
+            //        {
+            //            Logger.WriteLog(ex);
+            //        }
+            //    }
+            //}
+            #endregion
+
         }
 
 

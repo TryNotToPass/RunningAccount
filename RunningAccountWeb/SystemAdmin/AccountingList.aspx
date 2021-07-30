@@ -33,7 +33,7 @@
                                 <ItemTemplate>
                                     <%--以下兩種做法，都可以用--%>
                                     <%--<%# ((int)Eval("ActType") == 0) ? "支出" : "收入" %>--%>
-                                    <asp:Literal ID="liactt" runat="server"></asp:Literal>
+                                    <%--<asp:Literal ID="liactt" runat="server"></asp:Literal>--%>
                                     <asp:Label ID="Label1" runat="server" Text="Label"></asp:Label>
                                 </ItemTemplate>
                             </asp:TemplateField>
